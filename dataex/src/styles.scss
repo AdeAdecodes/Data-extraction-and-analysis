@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+input {
+  font-family: "Poppins", sans-serif;
+}
+.card-body ul.stepper.horizontal .step.active .step-title:before {
+  background-color: #f2680d !important;
+}
