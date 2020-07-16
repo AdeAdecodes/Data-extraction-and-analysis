@@ -326,16 +326,18 @@
       <th>Tran. date</th>
       <th>Transaction details</th>
       <th>Value date</th>
+      <th>Type</th>
     </tr>
     <tr *ngFor="let item of data">
 
       <td>{{item.Balance | currency:'INR':'₦'}}</td>
       <td>{{item.Credit | currency:'INR':'₦'}}</td>
       <td>{{item.Debit | currency:'INR':'₦'}}</td>
-      <td>{{item['Tran. date']| date}}</td>
+      <td>{{item['Tran. date']| date:'dd-MM-yyyy' }}</td>
       <td>{{item['Transaction details']}}</td>
     
       <td>{{item['Value date'] | date}}</td>
+      <td>{{item.Type}}</td>
     
     </tr>
   
