@@ -62,26 +62,29 @@ export class AppComponent {
 
  ReqularExpressionChecker(e){
 
-  const CreditPhrase = /\bDISBURSEMENT|CREDIT ARRANGEMENT|LOAN|FACILITY|CREDIT|PAY\b/g
-  const DebitPhrase = /\bREMITA|DIRECT DEBIT|LOAN REPAYMENT|LOAN PYMT |LOAN INSTALLMENT|PAYMENT\b/g
-  const IncomePhrase = /\SALARY|NETPAY|BONUS|REMUNERATION\b/g
+  const CreditPhrase = /\bDISBURSEMENT|CREDIT[\w\s]+ARRANGEMENT|LOAN|FACILITY|CREDIT\b/g
+  const DebitPhrase = /\bREMITA|DIRECT[\w\s]+DEBIT|LOAN[\w\s]+REPAYMENT|LOAN[\w\s]+PYMT|LOAN[\w\s]+INSTALLMENT|PAYMENT\b/g
+  const IncomePhrase = /\bSALARY|NETPAY|BONUS|REMUNERATION|salary\b/g
 
   let value = e['Transaction details'].toString().toUpperCase();
+  let debit = e['Debit']
+  let credit = e['Credit']
+  if((IncomePhrase.test(value)) && (credit > 0)){
+    this.data.push({...e,Type:'INCOME'})
+  
+  }
+ else if((DebitPhrase.test(value)) && (debit > 0)){
+    this.data.push({...e,Type:'DEBIT'})
 
-if(CreditPhrase.test(value)){
+}
+
+else
+if((CreditPhrase.test(value)) && (credit > 0)){
   this.data.push({...e,Type:'CREDIT'})
 
 }
 
-else if(DebitPhrase.test(value)){
-  this.data.push({...e,Type:'DEBIT'})
 
-}
-
-else if(IncomePhrase.test(value)){
-  this.data.push({...e,Type:'INCOME'})
-
-}
 
 
  }
