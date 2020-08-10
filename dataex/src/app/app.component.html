@@ -316,29 +316,26 @@
 </div>
 
 <div class="content" role="main">
-  <input type="file" style="display: inline-block;" (change)="onFileChange($event)" placeholder="Upload file" accept=".xlsx">
+  <input type="file" style="display: inline-block;" (change)="onFileChange($event)" (click)='click()' placeholder="Upload file" accept=".xlsx">
   
   <table *ngIf="data">
     <tr>
-      <th>Balance</th>
-      <th>Credit</th>
-      <th>Debit</th>
-      <th>Tran. date</th>
-      <th>Transaction details</th>
+      <th>Transaction Date</th>
       <th>Value date</th>
+      <th>Description</th>
+      <th>Withdrawls</th>
+      <th>Deposits</th>
+      <th>Balance</th>
       <th>Type</th>
     </tr>
     <tr *ngFor="let item of data">
-
-      <td>{{item.Balance | currency:'INR':'₦'}}</td>
-      <td>{{item.Credit | currency:'INR':'₦'}}</td>
-      <td>{{item.Debit | currency:'INR':'₦'}}</td>
-      <td>{{item['Tran. date']| date:'dd-MM-yyyy' }}</td>
-      <td>{{item['Transaction details']}}</td>
-    
-      <td>{{item['Value date'] | date}}</td>
+      <td>{{item['Transacti on Date']}}</td>
+      <td>{{item['Value Date']}}</td>
+      <td>{{item['Description']}}</td>
+      <td>{{item[' Withdrawls '] | currency:'INR':'₦'}}</td>
+      <td>{{item[' Deposits '] | currency:'INR':'₦'}}</td>
+      <td>{{item[' Balance '] | currency:'INR':'₦'}}</td>
       <td>{{item.Type}}</td>
-    
     </tr>
   
   </table>

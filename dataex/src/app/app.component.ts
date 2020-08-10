@@ -9,7 +9,8 @@ import * as XLSX from 'xlsx';
 export class AppComponent {
   title = 'dataex';
   data=[];
-
+  debit: Number;
+  credit: Number;
   onFileChange(event: any) {
     /* wire up file reader */
     const target: DataTransfer = <DataTransfer>(event.target);
@@ -26,62 +27,64 @@ export class AppComponent {
       const wb:any = XLSX.read(binarystr, { type: 'binary',cellDates: true });
 
       /* selected the first sheet */
-  
-      const wsname: string = wb.SheetNames[2];
+      console.log(wb.SheetNames[0])
+      const wsname: string = wb.SheetNames[0];
+      // console.log()
       const ws: XLSX.WorkSheet = wb.Sheets[wsname];
 
       /* save data */
      let data = XLSX.utils.sheet_to_json(ws); // to get 2d array pass 2nd parameter as object {header: 1}
  // Data will be logged in array format containing objects
  const CreditPhrase = /\bDISBURSEMENT|CREDIT ARRANGEMENT|LOAN|FACILITY|CREDIT|PAY\b/g
- console.log(data);
+ 
  data.forEach((e:any)=>{
+console.log(e)
 
-  if(e.Debit == 0 ){
+console.log(e['Description'])
 
-    this.ReqularExpressionChecker(e)
-
-  }
- else if (e.Credit == 0 ){
-
-  this.ReqularExpressionChecker(e)
-
-  }
-
-  else{
-    this.ReqularExpressionChecker(e)
-  }
-
-
+this.ReqularExpressionChecker(e)
 
  })
     
     
     };
  }
-
+click(){
+  this.data = [];
+}
  ReqularExpressionChecker(e){
 
-  const CreditPhrase = /\bDISBURSEMENT|CREDIT[\w\s]+ARRANGEMENT|LOAN|FACILITY|CREDIT\b/g
-  const DebitPhrase = /\bREMITA|DIRECT[\w\s]+DEBIT|LOAN[\w\s]+REPAYMENT|LOAN[\w\s]+PYMT|LOAN[\w\s]+INSTALLMENT|PAYMENT\b/g
-  const IncomePhrase = /\bSALARY|NETPAY|BONUS|REMUNERATION|salary\b/g
+  const CreditPhrase = /\bDISBURSEMENT|\sCREDIT[\w\s]+ARRANGEMENT|\sLOAN|\sFACILITY\b/g
+ const DebitPhrase = /\bREMITA|DIRECT[\w\s]+DEBIT|LOAN[\s]+REPAYMENT|LOAN[\w\s]+PYMT|LOAN[\w\s]+INSTALLMENT|\sPAYMENT\b/g
+  const IncomePhrase = /\bSALARY|\sNETPAY|\sBONUS|\sREMUNERATION|salary\b/g
 
-  let value = e['Transaction details'].toString().toUpperCase();
-  let debit = e['Debit']
-  let credit = e['Credit']
-  if((IncomePhrase.test(value)) && (credit > 0)){
+  let value = e['Description'].toString().toUpperCase();
+ 
+  if(e[' Withdrawls '] == undefined){
+     this.debit = 0;
+  }else{
+   this.debit = e[' Withdrawls '] 
+  }
+  if(e[' Deposits '] === undefined){
+    this.credit = 0;
+ }else{
+  this.credit = e[' Deposits '] 
+ }
+  if((IncomePhrase.test(value)) && (this.credit > 0)){
     this.data.push({...e,Type:'INCOME'})
   
   }
- else if((DebitPhrase.test(value)) && (debit > 0)){
+ else if((DebitPhrase.test(value)) && (this.debit > 0)){
     this.data.push({...e,Type:'DEBIT'})
 
 }
 
 else
-if((CreditPhrase.test(value)) && (credit > 0)){
+if((CreditPhrase.test(value)) && (this.credit > 0)){
   this.data.push({...e,Type:'CREDIT'})
 
+} else {
+  this.data.push({...e})
 }
 
 
