@@ -8,9 +8,14 @@ import * as XLSX from 'xlsx';
 })
 export class AppComponent {
   title = 'dataex';
+  loading: Boolean = true;
   data=[];
+  set =[];
+  min : any = 0;
+  max : any = 0;
   debit: Number;
   credit: Number;
+  ring: string;
   onFileChange(event: any) {
     /* wire up file reader */
     const target: DataTransfer = <DataTransfer>(event.target);
@@ -37,7 +42,7 @@ export class AppComponent {
  // Data will be logged in array format containing objects
  const CreditPhrase = /\bDISBURSEMENT|CREDIT ARRANGEMENT|LOAN|FACILITY|CREDIT|PAY\b/g
  
- data.forEach((e:any)=>{
+ data.forEach((e:any)=> {
 console.log(e)
 
 console.log(e['Description'])
@@ -46,8 +51,10 @@ this.ReqularExpressionChecker(e)
 
  })
     
-    
+ 
     };
+  
+
  }
 click(){
   this.data = [];
@@ -72,8 +79,19 @@ click(){
  }
   if((IncomePhrase.test(value)) && (this.credit > 0)){
     this.data.push({...e,Type:'INCOME'})
-  
-  }
+    let salary = /\bSALARY|\ssalary\b/g
+    let bonus = /\bBONUS|\sbonus\b/g
+    if(salary.test(value) && (!bonus.test(value))){
+    
+this.ring = e['Value Date'].toString().toUpperCase()
+const words = this.ring.split(' ');
+let saldate = parseInt(words[2])
+console.log(words[2]);
+this.set.push(saldate)
+    }
+    this.min = Math.min(...this.set)
+    this.max = Math.max(...this.set)
+  } 
  else if((DebitPhrase.test(value)) && (this.debit > 0)){
     this.data.push({...e,Type:'DEBIT'})
 
