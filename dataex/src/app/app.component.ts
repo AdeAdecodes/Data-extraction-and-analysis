@@ -1,112 +1,182 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy, } from '@angular/core';
 import * as XLSX from 'xlsx';
 
+type AOA = any[][];
+var value=0;
+
 @Component({
+
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: [ './app.component.scss' ]
 })
-export class AppComponent {
-  title = 'dataex';
-  loading: Boolean = true;
-  data=[];
-  set =[];
-  min : any = 0;
-  max : any = 0;
-  debit: Number;
-  credit: Number;
-  ring: string;
-  onFileChange(event: any) {
-    /* wire up file reader */
-    const target: DataTransfer = <DataTransfer>(event.target);
-    if (target.files.length !== 1) {
-      throw new Error('Cannot use multiple files');
-    }
-    const reader: FileReader = new FileReader();
-    reader.readAsBinaryString(target.files[0]);
-    reader.onload = (e: any) => {
-      /* create workbook */
+export class AppComponent     {
+  set: any;
+  min: number;
+  max: number;
+  constructor(private cdr: ChangeDetectorRef) {}
+  name =0;
+  fileName: string = 'SheetJS.xlsx';
+  data: any;
+  headData: any // excel row header
+salaryPaid: any ;
+salanum:any;
 
+ngAfterContentChecked() {
+
+  // this.salanum;
+  this.cdr.detectChanges();
   
-      const binarystr: string = e.target.result;
-      const wb:any = XLSX.read(binarystr, { type: 'binary',cellDates: true });
+   }
 
-      /* selected the first sheet */
-      console.log(wb.SheetNames[0])
+
+  /* <input type="file" (change)="onFileChange($event)" multiple="false" /> */
+  /* ... (within the component class definition) ... */
+  onFileChange(evt: any) {
+    /* wire up file reader */
+    this.salanum=0;
+    const target: DataTransfer = <DataTransfer>(evt.target);
+    if (target.files.length !== 1) throw new Error('Cannot use multiple files');
+    const reader: FileReader = new FileReader();
+    reader.onload = (e: any) => {
+      /* read workbook */
+      const bstr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(bstr, {type: 'binary'});
+
+      /* grab first sheet */
       const wsname: string = wb.SheetNames[0];
-      // console.log()
       const ws: XLSX.WorkSheet = wb.Sheets[wsname];
 
       /* save data */
-     let data = XLSX.utils.sheet_to_json(ws); // to get 2d array pass 2nd parameter as object {header: 1}
- // Data will be logged in array format containing objects
- const CreditPhrase = /\bDISBURSEMENT|CREDIT ARRANGEMENT|LOAN|FACILITY|CREDIT|PAY\b/g
- 
- data.forEach((e:any)=> {
-console.log(e)
+      this.data = <AOA>(XLSX.utils.sheet_to_json(ws, {header: 1, raw: false, range: 10}));
+      console.log(this.data[1]);
 
-console.log(e['Description'])
+      this.headData = this.data[0];
+      this.salaryPaid=[];
+      this.set=[];
+     // this.salanum=0;
+     this.ReqularExpressionChecker(1);
+      this.data = this.data.slice(1); // remove first header record
 
-this.ReqularExpressionChecker(e)
-
- })
-    
- 
+      const ws2: XLSX.WorkSheet = wb.Sheets[wb.SheetNames[1]];
+      this.readDataSheet(ws2, 10);
     };
-  
 
- }
-click(){
-  this.data = [];
-}
- ReqularExpressionChecker(e){
-
-  const CreditPhrase = /\bDISBURSEMENT|\sCREDIT[\w\s]+ARRANGEMENT|\sLOAN|\sFACILITY\b/g
- const DebitPhrase = /\bREMITA|DIRECT[\w\s]+DEBIT|LOAN[\s]+REPAYMENT|LOAN[\w\s]+PYMT|LOAN[\w\s]+INSTALLMENT|\sPAYMENT\b/g
-  const IncomePhrase = /\bSALARY|\sNETPAY|\sBONUS|\sREMUNERATION|salary\b/g
-
-  let value = e['Description'].toString().toUpperCase();
- 
-  if(e[' Withdrawls '] == undefined){
-     this.debit = 0;
-  }else{
-   this.debit = e[' Withdrawls '] 
+    
+    reader.readAsBinaryString(target.files[0]);
   }
-  if(e[' Deposits '] === undefined){
-    this.credit = 0;
- }else{
-  this.credit = e[' Deposits '] 
- }
-  if((IncomePhrase.test(value)) && (this.credit > 0)){
-    this.data.push({...e,Type:'INCOME'})
+
+  private readDataSheet(ws: XLSX.WorkSheet, startRow: number) {
+    /* save data */
+    let datas = <AOA>(XLSX.utils.sheet_to_json(ws, {header: 1, raw: false, range: startRow}));
+    console.log(datas[1]);
+    let headDatas = datas[0];
+    datas = datas.slice(1); // remove first header record
+
+    for (let i = 0; i < this.data.length; i++) {
+      this.data[i][this.headData.length] = datas.filter(x => x[12] == this.data[i][0])
+    }
+    console.log(this.data[0]);
+   // this.testlogic(this.data,this.headData)
+  }
+
+  export(): void {
+		/* generate worksheet */
+		const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(this.data);
+
+		/* generate workbook and add the worksheet */
+		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+		/* save to file */
+		XLSX.writeFile(wb, this.fileName);
+  }
+  
+  testlogic(data,head){
+let result;
+    data.forEach(element => {
+      for (let i = 1;i<=head.length;i++) {
+      // result.push({head[i]:data[i]} );
+      }
+      
+    });
+
+  }
+
+  public myFunction(value): string {
+    var numbers = value.map(this.numbersOnly);
     let salary = /\bSALARY|\ssalary\b/g
     let bonus = /\bBONUS|\sbonus\b/g
-    if(salary.test(value) && (!bonus.test(value))){
-    
-this.ring = e['Value Date'].toString().toUpperCase()
-const words = this.ring.split(' ');
-let saldate = parseInt(words[2])
-console.log(words[2]);
-this.set.push(saldate)
+    if(salary.test(value.toString().toUpperCase()) && (!bonus.test(value.toString()))){
+      var regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i
+      const matches = value.filter((animal) => regex.test(animal)).map((values)=>{
+        var parts =values.split('/');
+      
+       return parts[0]; 
+      });
+   
+  
+     this.set.push(...matches)
+      this.salaryPaid.push(1);
+   
+      this.salanum= this.salaryPaid.length;
+
     }
     this.min = Math.min(...this.set)
     this.max = Math.max(...this.set)
-  } 
- else if((DebitPhrase.test(value)) && (this.debit > 0)){
-    this.data.push({...e,Type:'DEBIT'})
+    return numbers.toString().replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
+
+  }
+
+  numbersOnly(e) {
+let value = '';
+    if (isNaN(parseInt(e))) {
+  const CreditPhrase = /\bDISBURSEMENT|\sCREDIT[\w\s]+ARRANGEMENT|\sLOAN|\sFACILITY|\sCR\b/g
+ const DebitPhrase = /\bREMITA|DIRECT[\w\s]+DEBIT|LOAN[\s]+REPAYMENT|LOAN[\w\s]+PYMT|LOAN[\w\s]+INSTALLMENT|\sPAYMENT\b/g
+  const IncomePhrase = /\bSALARY|\sNETPAY|\sBONUS|\sREMUNERATION|salary\b/g
+  if((IncomePhrase.test(e.toString().toUpperCase()))){
+   
+  
+    value= 'INCOME';
+  }
+  else if((DebitPhrase.test(e.toString().toUpperCase()))){
+    return 'DEBIT';
 
 }
-
 else
-if((CreditPhrase.test(value)) && (this.credit > 0)){
-  this.data.push({...e,Type:'CREDIT'})
+if((CreditPhrase.test(e.toString().toUpperCase()))){
+  value= 'CREDIT';
 
 } else {
-  this.data.push({...e})
+  value ='' ;
+}
+    }
+
+    return value;
 }
 
+ReqularExpressionChecker(e){
+ console.log('re');
+
+//   const CreditPhrase = /\bDISBURSEMENT|\sCREDIT[\w\s]+ARRANGEMENT|\sLOAN|\sFACILITY\b/g
+//  const DebitPhrase = /\bREMITA|DIRECT[\w\s]+DEBIT|LOAN[\s]+REPAYMENT|LOAN[\w\s]+PYMT|LOAN[\w\s]+INSTALLMENT|\sPAYMENT\b/g
+//   const IncomePhrase = /\bSALARY|\sNETPAY|\sBONUS|\sREMUNERATION|salary\b/g
+//   if((IncomePhrase.test(e))){
+//     return 'INCOME';
+//   }
+//   else if((DebitPhrase.test(e))){
+//     return 'DEBIT';
+
+// }
+// else
+// if((CreditPhrase.test(e))){
+//   return 'CREDIT';
+
+// } else {
+//   return '';
+// }
 
 
+}
 
- }
 }

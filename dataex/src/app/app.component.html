@@ -1,3 +1,5 @@
+
+
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
 <!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
@@ -104,43 +106,35 @@ article:nth-child(even) {
   </article>
   <article>
     <h4>Times Paid</h4>
-    <p>{{this.set.length}}</p>
+    <p>{{salanum}}</p>
   </article>
   <article>
     <h4>Latest Salary Paid</h4>
     <p>{{this.max}} </p>
   </article>
 </main>
-<div class="content">
-  <div class="col">
+<p>
+Please upload bank statement
+</p>
 
-      <input type="file" style="display: inline-block;" (change)="onFileChange($event)" (click)='click()' placeholder="Upload file" accept=".xlsx">
-  
-      <table *ngIf="data">
-        <tr>
-          <th>Transaction Date</th>
-          <th>Value date</th>
-          <th>Description</th>
-          <th>Withdrawls</th>
-          <th>Deposits</th>
-          <th>Balance</th>
-          <th>Type</th>
-        </tr>
-        <tr *ngFor="let item of data">
-          <td>{{item['Transacti on Date']}}</td>
-          <td>{{item['Value Date']}}</td>
-          <td>{{item['Description']}}</td>
-          <td>{{item[' Withdrawls '] | currency:'INR':'₦'}}</td>
-          <td>{{item[' Deposits '] | currency:'INR':'₦'}}</td>
-          <td>{{item[' Balance '] | currency:'INR':'₦'}}</td>
-          <td>{{item.Type}}</td>
-        </tr>
-      
-      </table>
- 
+<input type="file" (change)="onFileChange($event)" multiple="false" />
+
+<!-- class = sjs-table, ExcelTable2007 -->
+<table id="TheTable" class="ExcelTable2007">
+  <thead #header>
+
+  </thead>
+  <tbody #container>
+    <tr *ngFor="let row of data">
+      <td *ngFor="let val of headData; let i =index">
+        {{row[i] || ' '}} 
+      </td>
+      <td >{{myFunction(row)}}</td>
+    </tr>
+  </tbody>
+</table>
 
 
-</div>
+<!-- <div id="htmlout"></div> -->
 
-  </div>
 
