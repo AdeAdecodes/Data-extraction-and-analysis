@@ -12,8 +12,8 @@ var value=0;
 })
 export class AppComponent     {
   set: any;
-  min: number;
-  max: number;
+  min: number=0;
+  max: number=0;
   constructor(private cdr: ChangeDetectorRef) {}
   name =0;
   fileName: string = 'SheetJS.xlsx';
@@ -122,8 +122,11 @@ let result;
       this.salanum= this.salaryPaid.length;
 
     }
-    this.min = Math.min(...this.set)
-    this.max = Math.max(...this.set)
+    this.min = Math.min(...this.set)==Number.POSITIVE_INFINITY||Number.NEGATIVE_INFINITY?0: Math.min(...this.set);
+    this.max = Math.max(...this.set)==Number.POSITIVE_INFINITY||Number.NEGATIVE_INFINITY?0:Math.max(...this.set);
+    console.log(this.min );
+
+
     return numbers.toString().replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
 
   }
