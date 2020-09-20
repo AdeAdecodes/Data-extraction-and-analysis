@@ -115,6 +115,7 @@ article:nth-child(even) {
 </main>
 <p>
 Please upload bank statement
+{{this.money}}
 </p>
 
 <input type="file" (change)="onFileChange($event)" multiple="false" />
@@ -131,6 +132,8 @@ Please upload bank statement
         {{row[i] || ' '}} 
       </td>
       <td >{{myFunction(row)}}</td>
+    <!-- // <td >{{ summaryCalculation(row)}}</td>  -->
+   
     </tr>
   </tbody>
 </table>
