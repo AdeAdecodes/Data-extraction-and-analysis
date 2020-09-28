@@ -1,4 +1,4 @@
-
+<!--
 
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
@@ -17,12 +17,12 @@ main {
   max-width: 1200px;
   margin: 30px auto;
   padding: 0 20px;
-  width: 100%; 
+  width: 100%;
   display: grid;
   /* Define Auto Row size */
-  grid-auto-rows: 100px; 
+  grid-auto-rows: 100px;
   /*Define our columns */
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   grid-gap: 1em;
 }
 
@@ -95,11 +95,11 @@ article:nth-child(even) {
     display: flex;
     margin: 82px auto 32px;
     padding: 0 16px;
-    max-width: 960px; 
+    max-width: 960px;
   }
 
 </style>
-<main>
+<!-- <main>
   <article>
     <h4>Earliest Salary Paid</h4>
     <p>{{this.min}}</p>
@@ -112,8 +112,8 @@ article:nth-child(even) {
     <h4>Latest Salary Paid</h4>
     <p>{{this.max}} </p>
   </article>
-</main>
-<p>
+</main> -->
+<!-- <p>
 Please upload bank statement
 {{this.money}}
 </p>
@@ -125,20 +125,20 @@ Please upload bank statement
   <thead #header>
 
   </thead>
-  
+
   <tbody #container>
     <tr *ngFor="let row of data">
       <td *ngFor="let val of headData; let i =index">
-        {{row[i] || ' '}} 
+        {{row[i] || ' '}}
       </td>
       <td >{{myFunction(row)}}</td>
-    <!-- // <td >{{ summaryCalculation(row)}}</td>  -->
-   
+   <td >{{ summaryCalculation(row)}}</td>
+
     </tr>
   </tbody>
 </table>
 
 
-<div id="htmlout"></div>
+<div id="htmlout"></div> -->
 
-<!-- <router-outlet></router-outlet> -->
+<router-outlet></router-outlet>
