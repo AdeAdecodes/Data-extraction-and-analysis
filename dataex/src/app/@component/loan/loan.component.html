@@ -1,6 +1,8 @@
 
 
 
+<br/>
+
 <input type="file" (change)="onFileChange($event)">
 
 <div class="row m-4">
@@ -104,3 +106,24 @@
 </div>
 </div>
 
+<table mdbTable>
+  <thead  class="black white-text">
+    <tr>
+   <th>
+    Account Summary
+   </th>
+   <th>
+    Amount
+  </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr mdbTableCol *ngFor="let item of Element">
+     
+      <th>
+        {{item.entry}}
+      </th>
+    </tr>
+   
+  </tbody>
+</table>

@@ -8,7 +8,7 @@ import * as XLSX from 'xlsx';
 })
 export class LoanComponent implements OnInit {
 
-
+  Element=[];
   TotalCredit=0;
   TotalDebit=0;
   TotalIncome=0;
@@ -65,6 +65,7 @@ export class LoanComponent implements OnInit {
       this.maxDayPaid= Math.max(...this.salaryPay);
       this.minDayPaid= Math.min(...this.salaryPay);
       this.salaryCount=this.salaryPay.length;
+      console.log(this.Element);
     }
  }
 
@@ -95,35 +96,98 @@ export class LoanComponent implements OnInit {
    const RETURNCHEQUE  = /\bDAR|\sRTD[\w\s]+CHQ\b/g;
    if((IncomePhrase.test(e.Details.toString().toUpperCase()))){
     this.TotalIncome=this.TotalIncome+e.Credit;
+    this.Element.push(
+      {
+        type:'Income',
+        details:e.Details,
+        credit:e.Credit,
+        debit:e.Debit,
+        entry:e.EntryDate,
+        value:e.ValueDate,
+
+      }
+    )
   this.salaryPay.push(this.mmIsDate(e.EntryDate));
    }
   else if((DebitPhrase.test(e.Details.toString().toUpperCase()))){
   this.TotalDebit=this.TotalDebit+e.Debit;
 
 
+  this.Element.push(
+    {
+      type:'Debit',
+      details:e.Details,
+      credit:e.Credit,
+      debit:e.Debit,
+      entry:e.EntryDate,
+      value:e.ValueDate,
 
+    }
+  )
 
 
 }
 else
 if((CreditPhrase.test(e.Details.toString().toUpperCase()))){
+  this.Element.push(
+    {
+      type:'Credit',
+      details:e.Details,
+      credit:e.Credit,
+      debit:e.Debit,
+      entry:e.EntryDate,
+      value:e.ValueDate,
 
+    }
+  )
   this.TotalCredit=this.TotalDebit+e.Credit;
 }
 
 else
 if((OtherIncome.test(e.Details.toString().toUpperCase()))){
+  this.Element.push(
+    {
+      type:'OtherIncome',
+      details:e.Details,
+      credit:e.Credit,
+      debit:e.Debit,
+      entry:e.EntryDate,
+      value:e.ValueDate,
 
+    }
+  )
   this.TotalOtherIncome=this.TotalDebit+e.Credit;
 }
 else
 if((RETURNCHEQUE.test(e.Details.toString().toUpperCase()))){
 
+  this.Element.push(
+    {
+      type:'Return Cheques',
+      details:e.Details,
+      credit:e.Credit,
+      debit:e.Debit,
+      entry:e.EntryDate,
+      value:e.ValueDate,
+
+    }
+  )
+
   this.TotalReturnCheque=this.TotalDebit+e.Credit;
 }
 
 else {
+  this.Element.push(
+    {
+      type:'',
+      details:e.Details,
+      credit:e.Credit,
+      debit:e.Debit,
+      entry:e.EntryDate,
+      value:e.ValueDate,
 
+    }
+  )
 }
  }
 
