@@ -110,18 +110,43 @@
   <thead  class="black white-text">
     <tr>
    <th>
-    Account Summary
+  Entry Date
    </th>
    <th>
-    Amount
-  </th>
+   Details
+     </th>
+     <th>
+     Credit
+   </th>
+  <th>
+ Debit
+ </th>
+ <th>
+   Value Date
+ </th>
+ <th>
+ Type
+</th>
     </tr>
   </thead>
   <tbody>
     <tr mdbTableCol *ngFor="let item of Element">
-     
+
       <th>
-        {{item.entry}}
+        {{item.entry * 1000 | date}}
+      </th>
+      <th>
+        {{item.details}}
+      </th> <th>
+        {{item.credit  | currency:'₦':'symbol'}}
+      </th> <th>
+        {{item.debit  | currency:'₦':'symbol'}}
+      </th> 
+       <th>
+        {{item.value | date: 'dd/MM/yyyy'}}
+      </th>
+      <th>
+        {{item.type }}
       </th>
     </tr>
    
